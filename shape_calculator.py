@@ -28,11 +28,34 @@ class Rectangle:
 
     def get_picture(self):
         with open('rectangle.txt', 'w+') as fh:
-            fh.write(f'{"*"*self.width}\n')
-            return fh.read()
+            if self.width > 50 or self.height > 50:
+                return f'Too big for picture.'
+            for h in range(self.height):
+                fh.write(f'{"*"*self.width}\n')
+                fh.read().rstrip('\n')
+        with open('rectangle.txt', 'r+') as file_handler:
+            return file_handler.read()
 
-    def get_amount_inside(self):
-        pass
+    def get_amount_inside(self, shape):
+
+        if isinstance(shape, Square) and isinstance(self, Square):
+            side = self.width // shape.side
+            return side**2
+
+        elif isinstance(shape, Square) and isinstance(self, Rectangle):
+            height = self.height // shape.side
+            width = self.width // shape.side
+            return height * width
+
+        elif isinstance(shape, Rectangle) and isinstance(self, Square):
+            height = self.height // shape.height
+            width = self.width // shape.width
+            return height * width
+
+        elif isinstance(shape, Rectangle) and isinstance(self, Rectangle):
+            height = self.height // shape.height
+            width = self.width // shape.width
+            return height * width
 
 
 class Square(Rectangle):
@@ -44,23 +67,22 @@ class Square(Rectangle):
     def __str__(self):
         return f'Square(side={self.side})'
 
-    def set_side(self, side_length):
-        self.side = side_length
+    def set_side(self, side):
+        self.side = self.width = self.height = side
         return self.side
 
     def set_width(self, width):
-        self.width = width
-        self.height = width
+        self.width = self.height = width
         self.side = width
         return self.side
 
     def set_height(self, height):
-        self.width = height
-        self.height = height
+        self.width = self.height = height
         self.side = height
         return self.side
 
 
 if __name__ == '__main__':
-    rectangle = Rectangle(5,4)
-    print(rectangle.get_picture())
+    square = Square(2)
+    big_square = Square(8)
+    print(big_square.get_amount_inside(square))
